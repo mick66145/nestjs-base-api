@@ -1,0 +1,17 @@
+services:
+  dev:
+    image: ${PROJECT_IMAGE_NAME}:dev-1.0
+    restart: unless-stopped
+    tty: true
+    ports:
+      - ${HOST_APP_PORT}:3000
+    volumes:
+      - ../:/app
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    name: ${COMPOSE_PROJECT_NAME}_app_network
+    driver: bridge
+    external: true

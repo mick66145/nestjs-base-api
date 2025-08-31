@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    expose:
+      - 5432
+    ports:
+      - ${HOST_POSTGRES_PORT}:5432
+    env_file:
+      - ../.env
+    volumes:
+      - ../postgres/data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  # mongodb:
+  #   image: mongo:7.0
+  #   restart: unless-stopped
+  #   expose:
+  #     - 27017
+  #   ports:
+  #     - ${HOST_MONGODB_PORT}:27017
+  #   volumes:
+  #     - ../mongodb/data:/data/db
+  #   networks:
+  #     - db_network
+
+# volumes:
+  # pg-data:
+  # mongo-data:
+
+networks:
+  app_network:
+    name: ${COMPOSE_PROJECT_NAME}_app_network
+    driver: bridge
+    external: false

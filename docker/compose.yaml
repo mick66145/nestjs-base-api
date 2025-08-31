@@ -1,0 +1,21 @@
+services:
+  app:
+    image: ${PROJECT_IMAGE_NAME}:prod-1.0
+    restart: unless-stopped
+    command: node dist/main
+    env_file:
+      - ../.env
+    ports:
+      - ${HOST_APP_PORT}:3000
+    volumes:
+      - ./app/dist:/app/dist
+      - ./app/prisma_client:/app/node_modules/.prisma
+      - ./app_logs:/app/logs
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    name: ${COMPOSE_PROJECT_NAME}_app_network
+    driver: bridge
+    external: true
