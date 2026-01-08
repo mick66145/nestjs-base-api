@@ -17,6 +17,7 @@ import { AppController } from './app.controller';
     ConfigModule.forRoot({
       isGlobal: true,
       load: configLoads,
+      expandVariables: true,
     }), // ref: https://docs.nestjs.com/techniques/configuration
     // BullModule.forRootAsync({
     //   useFactory: (configService: ConfigService) => {

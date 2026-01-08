@@ -1,7 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsArray, IsInt, IsOptional } from 'class-validator';
+import { IsArray, IsInt, IsOptional, IsString } from 'class-validator';
+import { TransformEmptyStringToUndefined } from '../transform/transform-to';
 
 export function IntIdsQuery(idName: string = '') {
   return applyDecorators(
@@ -14,9 +15,27 @@ export function IntIdsQuery(idName: string = '') {
     IsInt({ each: true }),
     Transform(
       ({ value }) =>
-        Array.isArray(value) ? value : value.split(',').map((d) => parseInt(d)),
+        Array.isArray(value) ? value : String(value).split(',').map(Number),
       { toClassOnly: true },
     ),
+    TransformEmptyStringToUndefined,
+  );
+}
+
+export function StringIdsQuery(idName: string = '') {
+  return applyDecorators(
+    ApiPropertyOptional({
+      type: String,
+      description: `${idName} ID 列表，以","分隔的字串，如：1,2,3`,
+    }),
+    IsOptional(),
+    IsArray(),
+    IsString({ each: true }),
+    Transform(
+      ({ value }) => (Array.isArray(value) ? value : String(value).split(',')),
+      { toClassOnly: true },
+    ),
+    TransformEmptyStringToUndefined,
   );
 }
 
